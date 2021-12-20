@@ -1,8 +1,4 @@
 #!/bin/bash
-ORANGE="\e[0;33m"
-BLUE="\e[0;34m"
-GREEN="\e[1;32m"
-PURPLE="\e[1;35m"
 vCPU=$(grep -c processor /proc/cpuinfo)
 PCPU=$(grep "physical id" /proc/cpuinfo | uniq |wc -l)
 ARCH=$(uname -a)
@@ -19,16 +15,19 @@ U_DISK=${U_DISK%G}
 T_DISK=$(df -h '/' | awk 'NR==2 {print $2}')
 P_DISK=$(df -h '/' | awk 'NR==2 {print $5}')
 L_BOOT=$(who -b | awk '{$1=$2="";print $0}' | cut -d " " -f3-)
+LVM_S=$(lsblk | grep "lvm" | wc -l)
+LVM_A=$(if [ $lvmt -eq 0 ]; then echo no; else echo yes; fi)
 SUDO_C=$(journalctl _COMM=sudo -q | grep COMMAND | wc -l)
 MAC=$(ip link show | awk '$1 == "link/ether" {print $2}' | awk 'NR==1{print $1}')
 
-echo -e	"$BLUE#Architecture : $ARCH"
+echo  "#Architecture : $ARCH"
 echo 	"#CPU Physical : $PCPU"
-echo -e	"$ORANGE#vCPU : $vCPU"
+echo 	"#vCPU : $vCPU"
 echo 	"#Memory Usage : $U_RAM/${T_RAM}MB ($P_RAM%)"
-echo -e	"$GREEN#Disk Usage : $U_DISK/$T_DISK ($P_DISK)"
+echo 	"#Disk Usage : $U_DISK/$T_DISK ($P_DISK)"
 echo	"#CPU load : $CPU_L%"
-echo -e	"#Last Boot : $L_BOOT"
+echo 	"#Last Boot : $L_BOOT"
+echo  "#LVM use : $LVM_A"
 echo	"#Connexions TCP : $TCP ESTABLISHED"
 echo	"#User log : $UC"
 echo	"#Network : IP $IP ($MAC)"
