@@ -13,7 +13,7 @@ U_RAM=$(free -m | awk '$1 == "Mem:" {print $3}')
 T_RAM=$(free -m | awk '$1 == "Mem:" {print $2}')
 P_RAM=$((100 * U_RAM / T_RAM))
 
-UC=$(users | wc -l)
+UC=$(users | wc -w)
 
 CPU_L=$(top -bn1 |grep load |awk '{print $12}')
 CPU_L=${CPU_L%,}
